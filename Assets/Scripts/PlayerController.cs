@@ -6,15 +6,17 @@ using System;
 public class PlayerController : MonoBehaviour
 {
 	public float moveSpeed = 6f;
-	public float jumpForce = 3f;
+	float jumpForce = 3f;
 	public Transform feetPos;
 	public float checkRadius;
 	public LayerMask whatIsGround;
+	public Transform attackPoint;
+	public LayerMask enemyLayer;
 	bool isGrounded;
 	Rigidbody2D rigidbody;
 	Vector2 movement;
 	float jumpTimeCounter;
-	public float jumpTime = 0.5f;
+	float jumpTime = 0.5f;
 	bool isJumping;
 	float moveInput;
 	Animator playerAnimator;
@@ -78,11 +80,33 @@ public class PlayerController : MonoBehaviour
 			isJumping = false;
 			playerAnimator.SetBool("IsJumping", isJumping);
 		}
+
+		// Attacking
+		if (Input.GetKeyUp(KeyCode.J))
+		{
+			playerAnimator.SetTrigger("IsAttacking");
+			playerAnimator.SetFloat("IsAttackingMove", 1);
+		}
+		if (Input.GetKeyUp(KeyCode.K))
+		{
+			playerAnimator.SetTrigger("IsAttacking");
+			playerAnimator.SetFloat("IsAttackingMove", 2);
+		}
+		if (Input.GetKeyUp(KeyCode.L))
+		{
+			playerAnimator.SetTrigger("IsAttacking");
+			playerAnimator.SetFloat("IsAttackingMove", 3);
+		}
 	}
 	private void FixedUpdate()
 	{
 		// rigidbody.MovePosition(rigidbody.position + movement * moveSpeed * Time.fixedDeltaTime);
 		rigidbody.velocity = new Vector2(moveInput * moveSpeed, rigidbody.velocity.y);
+	}
+
+	void Attack()
+	{
+
 	}
 }
 
