@@ -7,6 +7,11 @@ public class PlayerController : MonoBehaviour
 {
 	public float moveSpeed = 6f;
 	float jumpForce = 3f;
+	public float attackRange = 0.5f;
+	public int attackDamage = 50;
+	public float attackRate = 2f;
+	float nextAttackTime = 0f;
+	float jumpTime = 0.5f;
 	public Transform feetPos;
 	public float checkRadius;
 	public LayerMask whatIsGround;
@@ -16,7 +21,6 @@ public class PlayerController : MonoBehaviour
 	Rigidbody2D rigidbody;
 	Vector2 movement;
 	float jumpTimeCounter;
-	float jumpTime = 0.5f;
 	bool isJumping;
 	float moveInput;
 	Animator playerAnimator;
@@ -82,20 +86,27 @@ public class PlayerController : MonoBehaviour
 		}
 
 		// Attacking
-		if (Input.GetKeyUp(KeyCode.J))
+		if (Time.time >= nextAttackTime)
 		{
-			playerAnimator.SetTrigger("IsAttacking");
-			playerAnimator.SetFloat("IsAttackingMove", 1);
-		}
-		if (Input.GetKeyUp(KeyCode.K))
-		{
-			playerAnimator.SetTrigger("IsAttacking");
-			playerAnimator.SetFloat("IsAttackingMove", 2);
-		}
-		if (Input.GetKeyUp(KeyCode.L))
-		{
-			playerAnimator.SetTrigger("IsAttacking");
-			playerAnimator.SetFloat("IsAttackingMove", 3);
+			if (Input.GetKeyUp(KeyCode.J))
+			{
+				attackRange = 0.4f;
+				playerAnimator.SetFloat("IsAttackingMove", 1);
+				Attack();
+			}
+			if (Input.GetKeyUp(KeyCode.K))
+			{
+				attackRange = 1f;
+				playerAnimator.SetFloat("IsAttackingMove", 2);
+				Attack();
+			}
+			if (Input.GetKeyUp(KeyCode.L))
+			{
+				attackRange = 0.9f;
+				playerAnimator.SetFloat("IsAttackingMove", 3);
+				Attack();
+			}
+
 		}
 	}
 	private void FixedUpdate()
@@ -106,7 +117,19 @@ public class PlayerController : MonoBehaviour
 
 	void Attack()
 	{
+		playerAnimator.SetTrigger("IsAttacking");
+		Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
+		foreach (Collider2D enemy in hitEnemies)
+		{
+			enemy.GetComponent<EnemyController>().TakeDamage(attackDamage);
+		}
+		nextAttackTime = Time.time + 1f / attackRate;
+	}
 
+	void OnDrawGizmosSelected()
+	{
+		if (attackPoint == null)
+			return;
+		Gizmos.DrawWireSphere(attackPoint.position, attackRange);
 	}
 }
-
