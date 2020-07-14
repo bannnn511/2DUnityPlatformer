@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
 
 public class EnemyController : MonoBehaviour
 {
@@ -9,17 +10,28 @@ public class EnemyController : MonoBehaviour
 	int currentHealth;
 	Rigidbody2D enemyRigidBody;
 	// Start is called before the first frame update
+	public AIPath aiPath;
 	void Start()
 	{
 		enemyAnimator = GetComponent<Animator>();
 		currentHealth = maxHealth;
 		enemyRigidBody = GetComponent<Rigidbody2D>();
+		aiPath = GetComponent<AIPath>();
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-
+		if (aiPath.desiredVelocity.x <= 0.01f)
+		{
+			transform.eulerAngles = new Vector3(0, 0, 0);
+			enemyAnimator.SetBool("isWalking", true);
+		}
+		else
+		{
+			transform.eulerAngles = new Vector3(0, 180, 0);
+			enemyAnimator.SetBool("isWalking", true);
+		}
 	}
 
 	public void TakeDamage(int damage)
@@ -36,6 +48,6 @@ public class EnemyController : MonoBehaviour
 	{
 		enemyAnimator.SetBool("IsDeath", true);
 		GetComponent<Rigidbody2D>().simulated = false;
-		// this.enabled = false;
+		this.transform.position = new Vector2(enemyRigidBody.position.x, -5.7f);
 	}
 }
