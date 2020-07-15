@@ -6,7 +6,7 @@ using System;
 public class PlayerController : MonoBehaviour
 {
 	public float moveSpeed = 6f;
-	float jumpForce = 5f;
+	public float jumpForce = 6f;
 	public float attackRange = 0.5f;
 	public int attackDamage = 50;
 	public float attackRate = 2f;

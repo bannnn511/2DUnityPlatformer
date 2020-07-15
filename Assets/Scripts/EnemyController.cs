@@ -25,13 +25,18 @@ public class EnemyController : MonoBehaviour
 		if (aiPath.desiredVelocity.x <= 0.01f)
 		{
 			transform.eulerAngles = new Vector3(0, 0, 0);
-			enemyAnimator.SetBool("isWalking", true);
+			enemyAnimator.SetBool("IsWalking", true);
 		}
 		else
 		{
 			transform.eulerAngles = new Vector3(0, 180, 0);
-			enemyAnimator.SetBool("isWalking", true);
+			enemyAnimator.SetBool("IsWalking", true);
 		}
+
+		if (aiPath.remainingDistance <= 4) {
+			enemyAnimator.SetTrigger("Attack");
+		}
+	
 	}
 
 	public void TakeDamage(int damage)
@@ -47,6 +52,7 @@ public class EnemyController : MonoBehaviour
 	void Die()
 	{
 		enemyAnimator.SetBool("IsDeath", true);
+		enemyAnimator.SetBool("IsWalking", false);
 		GetComponent<Rigidbody2D>().simulated = false;
 		this.transform.position = new Vector2(enemyRigidBody.position.x, -5.7f);
 	}
