@@ -33,10 +33,11 @@ public class EnemyController : MonoBehaviour
 			enemyAnimator.SetBool("IsWalking", true);
 		}
 
-		if (aiPath.remainingDistance <= 4) {
+		if (aiPath.remainingDistance <= 4)
+		{
 			enemyAnimator.SetTrigger("Attack");
 		}
-	
+
 	}
 
 	public void TakeDamage(int damage)
@@ -54,6 +55,7 @@ public class EnemyController : MonoBehaviour
 		enemyAnimator.SetBool("IsDeath", true);
 		enemyAnimator.SetBool("IsWalking", false);
 		GetComponent<Rigidbody2D>().simulated = false;
+		GetComponent<AIPath>().enabled = false;
 		this.transform.position = new Vector2(enemyRigidBody.position.x, -5.7f);
 	}
 }
